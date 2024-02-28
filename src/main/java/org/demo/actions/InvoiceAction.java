@@ -9,7 +9,7 @@ public class InvoiceAction extends ActionSupport  {
 
     @Override
     public String execute() throws Exception {
-        System.out.println("execute!!");
+       this.calculate();
         return SUCCESS;
     }
 
@@ -25,5 +25,28 @@ public class InvoiceAction extends ActionSupport  {
         if (invoiceBean.getSubject().isEmpty()) {
             addFieldError("invoiceBean.subject", "El concepto es obligatorio.");
         }
+
+        if(invoiceBean.getDateTo()==null){
+            addFieldError("invoiceBean.dateTo", "Esta fecha es obligatoria.");
+        }
+
+        if(invoiceBean.getDateFrom()==null){
+            addFieldError("invoiceBean.dateFrom", "Esta fecha es obligatoria.");
+        }
+
+        if(invoiceBean.getGrossAmount() <=  0.0){
+            addFieldError("invoiceBean.grossAmount", "La cantidad bruta tiene que ser definida.");
+        }
+
+
+
+    }
+
+    private void calculate() {
+        double number = invoiceBean.getGrossAmount();
+        double ivaPercetantage = 0.21;
+        double iva = (number * ivaPercetantage);
+        double total = number + iva;
+        invoiceBean.setTotalAmount(total);
     }
 }
